@@ -8,12 +8,12 @@ const routes = [
   {
     path: '/client',
     name: 'Client',
-    component: () => import('../views/Client.vue')
+    component: () => import('../views/client/index.vue')
   },
   {
     path: '/task',
     name: 'Task',
-    component: () => import('../views/Client.vue')
+    component: () => import('../views/Task.vue')
   }
 ]
 

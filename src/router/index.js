@@ -14,6 +14,31 @@ const routes = [
     path: '/task',
     name: 'Task',
     component: () => import('../views/Task.vue')
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: () => import('../views/User.vue')
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: () => import('../views/Contact.vue')
+  },
+  {
+    path: '/calendar',
+    name: 'Calendar',
+    component: () => import('../views/Calendar.vue')
+  },
+  {
+    path: '/project',
+    name: 'Project',
+    component: () => import('../views/Project.vue')
+  },
+  {
+    path: '/bill',
+    name: 'Bill',
+    component: () => import('../views/Bill.vue')
   }
 ]
 

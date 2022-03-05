@@ -152,25 +152,14 @@ export default {
           route: '/task',
         },
         {
-          label: 'Documents',
+          label: 'Bills',
           icon: 'mdi-bookmark',
-          route: '/document',
+          route: '/bill',
         },
         {
           label: 'Contacts',
           icon: 'mdi-contacts',
-          children: [
-            {
-              label: 'contacts',
-              icon: 'mdi-local_phone',
-              route: '/contact',
-            },
-            {
-              label: 'address',
-              icon: 'mdi-my_location',
-              route: '/address',
-            },
-          ],
+          route: '/contact',
         },
         {
           label: 'Dictionaries',
@@ -215,19 +204,8 @@ export default {
         },
         {
           label: 'Users',
-          icon: 'mdi-security',
-          children: [
-            {
-              label: 'Uers',
-              icon: 'mdi-account_box',
-              route: '/user',
-            },
-            {
-              label: 'Groups',
-              icon: 'mdi-people_outline',
-              route: '/group',
-            },
-          ],
+          icon: 'mdi-account_box',
+          route: '/user',
         },
         {
           label: 'Maintenance',

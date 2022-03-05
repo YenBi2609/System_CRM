@@ -11,6 +11,7 @@
 
 <script>
 import Table from '@/components/Table.vue'
+import { taskApi } from '@/api/task';
 
 export default {
     name: 'Client',
@@ -54,8 +55,9 @@ export default {
 
     },
 
-    created () {
-
+    async created () {
+        let res = await taskApi.getTasks();
+        console.log(res);
     },
 
     methods: {

@@ -8,7 +8,7 @@ const routes = [
   {
     path: '/client',
     name: 'Client',
-    component: () => import('../views/client/index.vue')
+    component: () => import('../views/Client.vue')
   },
   {
     path: '/task',
@@ -31,9 +31,9 @@ const routes = [
     component: () => import('../views/Calendar.vue')
   },
   {
-    path: '/project',
-    name: 'Project',
-    component: () => import('../views/Project.vue')
+    path: '/product',
+    name: 'Product',
+    component: () => import('../views/Product.vue')
   },
   {
     path: '/bill',

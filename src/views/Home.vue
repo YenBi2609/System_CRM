@@ -142,9 +142,9 @@ export default {
           route: '/client',
         },
         {
-          label: 'Projects',
+          label: 'Product',
           icon: 'mdi-folder-open',
-          route: '/project',
+          route: '/product',
         },
         {
           label: 'Tasks',

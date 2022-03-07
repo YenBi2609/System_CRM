@@ -16,10 +16,10 @@
 
 <script>
 import Table from '@/components/Table.vue'
-import { taskApi } from '@/api/task';
+import { clientApi } from '@/api/client';
 
 export default {
-    name: 'Task',
+    name: 'Client',
     components: { 
         Table
     },
@@ -28,37 +28,35 @@ export default {
     },
     data() {
         return {
-            object: 'Công việc',
-            titleObject: 'Danh sách công việc',
+            object: 'Khách hàng',
+            titleObject: 'Danh sách khách hàng',
             action: {
-                add: 'Tạo công việc mới',
-                edit: 'Thông tin công việc',
-                delete: 'Xóa công việc'
+                add: 'Tạo khách hàn mới',
+                edit: 'Thông tin khách hàng',
+                delete: 'Xóa khách hàng'
             },
             headers: [
                 {
-                    text: 'Mã công việc',
+                    text: 'Mã khách hàng',
                     align: 'start',
                     sortable: true,
                     value: 'id',
                 },
-                { text: 'Tên công việc', value: 'name' },
-                { text: 'Trạng thái', value: 'status' },
-                { text: 'Mức độ ưu tiên', value: 'priority' },
-                { text: 'Người thực thi', value: 'user' },
-                { text: 'Thời gian', value: 'duration' },
-                { text: 'Ngày đến hạn', value: 'date' },
+                { text: 'Tên khách hàng', value: 'name' },
+                { text: 'Số điện thoại', value: 'phoneNumber' },
+                { text: 'Địa chỉ', value: 'address' },
+                { text: 'Email', value: 'email' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
             listData: [],
             defaultItem: [
-                { text: 'Tên công việc', value: '',key: 'name' },
-                { text: 'Trạng thái', value: '',key: 'status' },
-                { text: 'Mức độ ưu tiên', value: '',key: 'priority' },
-                { text: 'Người thực thi', value: '',key: 'user' },
-                { text: 'Thời gian', value: '',key: 'duration' },
-                { text: 'Ngày đến hạn', value: '',key: 'date' },
+                { text: 'Tên khách hàng',value: '', key: 'name' },
+                { text: 'Số điện thoại',value: '', key: 'phoneNumber' },
+                { text: 'Địa chỉ', value: '', key: 'address' },
+                { text: 'Email', value: '', key: 'email' },
             ],
+
+
         }
     },
     computed: {
@@ -67,14 +65,13 @@ export default {
     watch: {
 
     },
-
     created () {
-        this.getTask();
+        this.getClient();
     },
 
     methods: {
-        async getTask(){
-            let res = await taskApi.getTasks();
+        async getClient(){
+            let res = await clientApi.getClients();
             this.listData = res.response;
         },
         async addItem(item){
@@ -82,9 +79,8 @@ export default {
             item.map(index=>{
                 object[index.key] = index.value
             })
-
             try{
-                await taskApi.addTasks(object);
+                await clientApi.addClients(object);
             }
             catch(err){
                 console.log(err)
@@ -99,7 +95,7 @@ export default {
             })
             Object.assign(this.listData[data.index], object)
             try{
-                await taskApi.updateTasks(this.listData[data.index].id, object);
+                await clientApi.updateClients(this.listData[data.index].id, object);
             }
             catch(err){
                 console.log(err)
@@ -108,7 +104,7 @@ export default {
         async deleteItem(index){
 
             try{
-                await taskApi.deleteTasks(this.listData[index].id);
+                await clientApi.deleteClients(this.listData[index].id);
                 this.listData.splice(index, 1)
             }
             catch(err){

@@ -9,17 +9,17 @@
         :defaultItem="defaultItem"
         @add-item="addItem"
         @update-item="updateItem"
-        @delete-item="deleteItem"
+        @delete-item="deleteItem" 
         />
     </div>
 </template>
 
 <script>
 import Table from '@/components/Table.vue'
-import { taskApi } from '@/api/task';
+import { productApi } from '@/api/product';
 
 export default {
-    name: 'Task',
+    name: 'Product',
     components: { 
         Table
     },
@@ -28,37 +28,37 @@ export default {
     },
     data() {
         return {
-            object: 'Công việc',
-            titleObject: 'Danh sách công việc',
+            object: 'Sản phẩm',
+            titleObject: 'Danh sách sản phẩm',
             action: {
-                add: 'Tạo công việc mới',
-                edit: 'Thông tin công việc',
-                delete: 'Xóa công việc'
+                add: 'Tạo mới sản phẩm',
+                edit: 'Thông tin sản phẩm',
+                delete: 'Xóa sản phẩm'
             },
             headers: [
                 {
-                    text: 'Mã công việc',
+                    text: 'Mã sản phẩm',
                     align: 'start',
                     sortable: true,
                     value: 'id',
                 },
-                { text: 'Tên công việc', value: 'name' },
-                { text: 'Trạng thái', value: 'status' },
-                { text: 'Mức độ ưu tiên', value: 'priority' },
-                { text: 'Người thực thi', value: 'user' },
-                { text: 'Thời gian', value: 'duration' },
-                { text: 'Ngày đến hạn', value: 'date' },
+                { text: 'Tên sản phẩm', value: 'name' },
+                { text: 'Mô tả', value: 'description' },
+                { text: 'Giá bán', value: 'price' },
+                { text: 'Giá nhập', value: 'cost' },
+                { text: 'Số lượng', value: 'quantity' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
             listData: [],
             defaultItem: [
-                { text: 'Tên công việc', value: '',key: 'name' },
-                { text: 'Trạng thái', value: '',key: 'status' },
-                { text: 'Mức độ ưu tiên', value: '',key: 'priority' },
-                { text: 'Người thực thi', value: '',key: 'user' },
-                { text: 'Thời gian', value: '',key: 'duration' },
-                { text: 'Ngày đến hạn', value: '',key: 'date' },
+                { text: 'Tên sản phẩm',value: '', key: 'name' },
+                { text: 'Mô tả',value: '', key: 'description' },
+                { text: 'Giá bán',value: '', key: 'price' },
+                { text: 'Giá nhập',value: '', key: 'cost' },
+                { text: 'Số lượng',value: '', key: 'quantity' },
             ],
+
+
         }
     },
     computed: {
@@ -69,12 +69,12 @@ export default {
     },
 
     created () {
-        this.getTask();
+        this.getProduct();
     },
 
     methods: {
-        async getTask(){
-            let res = await taskApi.getTasks();
+        async getProduct(){
+            let res = await productApi.getProducts();
             this.listData = res.response;
         },
         async addItem(item){
@@ -82,9 +82,8 @@ export default {
             item.map(index=>{
                 object[index.key] = index.value
             })
-
             try{
-                await taskApi.addTasks(object);
+                await productApi.addProducts(object);
             }
             catch(err){
                 console.log(err)
@@ -99,7 +98,7 @@ export default {
             })
             Object.assign(this.listData[data.index], object)
             try{
-                await taskApi.updateTasks(this.listData[data.index].id, object);
+                await productApi.updateProducts(this.listData[data.index].id, object);
             }
             catch(err){
                 console.log(err)
@@ -108,7 +107,7 @@ export default {
         async deleteItem(index){
 
             try{
-                await taskApi.deleteTasks(this.listData[index].id);
+                await productApi.deleteProducts(this.listData[index].id);
                 this.listData.splice(index, 1)
             }
             catch(err){

@@ -47,7 +47,7 @@
                       <v-text-field
                         v-model="item.value"
                         :label="item.text"
-                        :rules="rules.name"
+                        :rules="[rules.required]"
                       ></v-text-field>
                   </div>
               </v-card-text>
@@ -172,15 +172,15 @@ export default {
     },
   data() {
     return {
-    page: 1,
-    pageCount: 0,
-    itemsPerPage: 10,
-    dialog: false,
-    dialogDelete: false,
-    editedItem: [],
-    editedIndex: -1,
-    rules: {
-        name: [val => (val).length > 0 || 'Vui lòng nhập đủ thông tin!'],
+      page: 1,
+      pageCount: 0,
+      itemsPerPage: 10,
+      dialog: false,
+      dialogDelete: false,
+      editedItem: [],
+      editedIndex: -1,
+      rules: {
+          required: value => !!value || 'Vui lòng nhập đủ thông tin!',
       },
     }
   },
@@ -262,12 +262,20 @@ export default {
     },
 
     save () {
-      if (this.editedIndex > -1) {
-        this.$emit('update-item', {index: this.editedIndex, item: this.editedItem})
-      } else {
-        this.$emit('add-item', this.editedItem)
+      let check = true;
+      this.editedItem.map(item =>{
+        if(item.value != ''){
+          check = false
+        }
+      })
+      if(check){
+        if (this.editedIndex > -1) {
+          this.$emit('update-item', {index: this.editedIndex, item: this.editedItem})
+        } else {
+          this.$emit('add-item', this.editedItem)
+        }
+        this.close()
       }
-      this.close()
     },
   }
 }

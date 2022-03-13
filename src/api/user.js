@@ -13,4 +13,7 @@ export const userApi = {
     deleteUsers(id) {
         return coreApi.del('delete-user/' + id)
     },
+    login(data) {
+        return coreApi.post('login', data)
+    },
 }

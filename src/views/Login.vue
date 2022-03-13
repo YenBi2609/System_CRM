@@ -59,8 +59,7 @@
 </template>
 
 <script>
-// import { userApi } from "./../api/user.js";
-// import { util } from "./../plugins/util.js";
+import { userApi } from '@/api/user';
 
 export default {
     mounted(){
@@ -96,37 +95,37 @@ export default {
             }
         },
         login() {
-            // this.$refs.form.validate();
-            // let thisCpn = this;
-            // if (this.valid) {
-            //     thisCpn.checkingUser = true;
-            //     userApi
-            //         .login(this.email.trim(), this.password.trim())
-            //         .then(async (res) => {
-            //             if (res.status == 200) {
-            //                 this.$store.commit('app/setAccountType', res.data.profile.type)
-            //                 await this.$store.dispatch('app/setUserInfo', res.data);
-            //                 if(this.$route.query.redirect){
-            //                     window.location.href = this.$route.query.redirect;
-            //                 }else{
-            //                     this.$router.push('/');
-            //                 }
-            //             } else {
-            //                 this.$snotifyError( {}, "Không thể đăng nhập","Tài khoản hoặc mật khẩu không chính xác!");
-            //             }
-            //         })
-            //         .catch(err => {
-            //             console.log("error from login api!!!", err);
-            //         })
-            //         .finally(() => {
-            //             setTimeout(() => {
-            //                 thisCpn.checkingUser = false;
-            //             }, 1000);
-            //         });
-            // } else {
-            //     console.log("Login info is not valide!!!!");
-            // }
-            this.$router.push("/home");
+            this.$refs.form.validate();
+            let thisCpn = this;
+            if (this.valid) {
+                thisCpn.checkingUser = true;
+                userApi
+                    .login({email: this.email.trim(), password: this.password.trim()})
+                    .then(async (res) => {
+                        if (res.data.user.length != 0) {
+                            // this.$store.commit('app/setAccountType', res.data.profile.type)
+                            // await this.$store.dispatch('app/setUserInfo', res.data);
+                            // if(this.$route.query.redirect){
+                            //     window.location.href = this.$route.query.redirect;
+                            // }else{
+                            //     this.$router.push('/');
+                            // }
+                            this.$router.push("/home");
+                        } else {
+                            this.$snotifyError( {}, "Không thể đăng nhập","Tài khoản hoặc mật khẩu không chính xác!");
+                        }
+                    })
+                    .catch(err => {
+                        console.log("error from login api!!!", err);
+                    })
+                    .finally(() => {
+                        setTimeout(() => {
+                            thisCpn.checkingUser = false;
+                        }, 1000);
+                    });
+            } else {
+                console.log("Login info is not valide!!!!");
+            }
         }
     },
     data() {

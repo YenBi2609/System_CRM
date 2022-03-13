@@ -264,7 +264,7 @@ export default {
     save () {
       let check = true;
       this.editedItem.map(item =>{
-        if(item.value != ''){
+        if(item.value == ''){
           check = false
         }
       })

@@ -16,10 +16,10 @@
 
 <script>
 import Table from '@/components/Table.vue'
-import { userApi } from '@/api/user';
+import { callApi } from '@/api/call';
 
 export default {
-    name: 'User',
+    name: 'Call',
     components: { 
         Table
     },
@@ -28,39 +28,36 @@ export default {
     },
     data() {
         return {
-            object: 'Nhân viên',
-            titleObject: 'Danh sách nhân viên',
+            object: 'Cuộc gọi',
+            titleObject: 'Danh sách cuộc gọi',
             action: {
-                add: 'Tạo mới nhân viên',
-                edit: 'Thông tin nhân viên',
-                delete: 'Xóa nhân viên'
+                add: 'Tạo mới cuộc gọi',
+                edit: 'Thông tin cuộc gọi',
+                delete: 'Xóa cuộc gọi'
             },
             headers: [
                 {
-                    text: 'Mã nhân viên',
+                    text: 'Mã cuộc gọi',
                     align: 'start',
                     sortable: true,
                     value: 'id',
                 },
-                { text: 'Tên nhân viên', value: 'name' },
                 { text: 'Số điện thoại', value: 'phoneNumber' },
-                { text: 'Địa chỉ', value: 'address' },
-                { text: 'Tên đăng nhập', value: 'email' },
-                { text: 'Mật khẩu', value: 'password' },
-                { text: 'Vai trò', value: 'role' },
+                { text: 'Mã khách hàng', value: 'idClient' },
+                { text: 'Tên khách hàng', value: 'clientName' },
+                { text: 'Thời gian', value: 'date' },
+                { text: 'Mã nhân viên gọi điện', value: 'idUser' },
+                { text: 'Nhân viên gọi điện', value: 'userName' },
+                { text: 'Ghi chú', value: 'note' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
             listData: [],
             defaultItem: [
-                { text: 'Tên nhân viên',value: '', key: 'name' },
-                { text: 'Số điện thoại',value: '', key: 'phoneNumber' },
-                { text: 'Địa chỉ',value: '', key: 'address' },
-                { text: 'Tên đăng nhập',value: '', key: 'email' },
-                { text: 'Mật khẩu',value: '', key: 'password' },
-                { text: 'Vai trò',value: '', key: 'role' },
+                { text: 'Mã khách hàng',value: '', key: 'idClient' },
+                { text: 'Thời gian',value: '', key: 'date' },
+                { text: 'Mã nhân viên gọi điện',value: '', key: 'idUser' },
+                { text: 'Ghi chú',value: '', key: 'note' },
             ],
-
-
         }
     },
     computed: {
@@ -71,13 +68,13 @@ export default {
     },
 
     created () {
-        this.getUser();
+        this.getCall();
     },
 
     methods: {
-        async getUser(){
-            let res = await userApi.getUsers();
-            this.listData = res.response;
+        async getCall(){
+            let res = await callApi.getCalls();
+            this.listData = res.listObject;
         },
         async addItem(item){
             let object  = {}
@@ -85,7 +82,7 @@ export default {
                 object[index.key] = index.value
             })
             try{
-                await userApi.addUsers(object);
+                await callApi.addCalls(object);
             }
             catch(err){
                 console.log(err)
@@ -100,7 +97,7 @@ export default {
             })
             Object.assign(this.listData[data.index], object)
             try{
-                await userApi.updateUsers(this.listData[data.index].id, object);
+                await callApi.updateCalls(this.listData[data.index].id, object);
             }
             catch(err){
                 console.log(err)
@@ -109,7 +106,7 @@ export default {
         async deleteItem(index){
 
             try{
-                await userApi.deleteUsers(this.listData[index].id);
+                await callApi.deleteCalls(this.listData[index].id);
                 this.listData.splice(index, 1)
             }
             catch(err){

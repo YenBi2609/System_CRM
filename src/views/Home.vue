@@ -143,80 +143,28 @@ export default {
         },
         {
           label: 'Product',
-          icon: 'mdi-folder-open',
+          icon: 'mdi-database-cog',
           route: '/product',
         },
         {
           label: 'Tasks',
-          icon: 'mdi-clock-outline',
+          icon: 'mdi-checkbox-marked-circle-plus-outline',
           route: '/task',
         },
         {
-          label: 'Bills',
-          icon: 'mdi-bookmark',
-          route: '/bill',
+          label: 'Orders',
+          icon: 'mdi-cart-heart',
+          route: '/order',
         },
         {
-          label: 'Contacts',
-          icon: 'mdi-contacts',
-          route: '/contact',
-        },
-        {
-          label: 'Dictionaries',
-          icon: 'mdi-list',
-          children: [
-            {
-              label: 'Country',
-              icon: 'mdi-flag',
-              route: '/country',
-            },
-            {
-              label: 'Language',
-              icon: 'mdi-format_align_justify',
-              route: '/language',
-            },
-            {
-              label: 'Contact_type',
-              icon: 'mdi-call_end',
-              route: '/contact_type',
-            },
-            {
-              label: 'Project_type',
-              icon: 'mdi-work',
-              route: '/project_type',
-            },
-            {
-              label: 'Project_status',
-              icon: 'mdi-web',
-              route: '/project_status',
-            },
-            {
-              label: 'Task_status',
-              icon: 'mdi-web_asset',
-              route: '/task_status',
-            },
-            {
-              label: 'Label',
-              icon: 'mdi-label',
-              route: '/label',
-            },
-          ],
+          label: 'Call',
+          icon: 'mdi-phone',
+          route: '/call',
         },
         {
           label: 'Users',
-          icon: 'mdi-account_box',
+          icon: 'mdi-account-cog',
           route: '/user',
-        },
-        {
-          label: 'Maintenance',
-          icon: 'mdi-cog',
-          children: [
-            {
-              label: 'History',
-              icon: 'mdi-timelapse',
-              route: '/history',
-            },
-          ],
         },
       ],
     }

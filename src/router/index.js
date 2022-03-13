@@ -21,9 +21,9 @@ const routes = [
     component: () => import('../views/User.vue')
   },
   {
-    path: '/contact',
-    name: 'Contact',
-    component: () => import('../views/Contact.vue')
+    path: '/call',
+    name: 'Call',
+    component: () => import('../views/Call.vue')
   },
   {
     path: '/calendar',
@@ -36,9 +36,9 @@ const routes = [
     component: () => import('../views/Product.vue')
   },
   {
-    path: '/bill',
-    name: 'Bill',
-    component: () => import('../views/Bill.vue')
+    path: '/order',
+    name: 'Order',
+    component: () => import('../views/Order.vue')
   }
 ]
 

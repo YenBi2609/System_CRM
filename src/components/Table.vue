@@ -27,7 +27,7 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                color="primary"
+                color="#f58634"
                 dark
                 class="mb-2"
                 v-bind="attrs"
@@ -104,8 +104,10 @@
     </v-data-table>
     <div class="text-center pt-2">
       <v-pagination
+      circle
         v-model="page"
         :length="pageCount"
+        color="#f58634"
       ></v-pagination>
     </div>
   </v-app>

@@ -31,7 +31,7 @@ export default {
             object: 'Khách hàng',
             titleObject: 'Danh sách khách hàng',
             action: {
-                add: 'Tạo khách hàn mới',
+                add: 'Tạo khách hàng mới',
                 edit: 'Thông tin khách hàng',
                 delete: 'Xóa khách hàng'
             },

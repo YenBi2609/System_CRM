@@ -1,5 +1,14 @@
  <template>
    <v-app>
+    <v-snackbar
+        top
+        light
+        v-model="notify"
+        color="#f58634"
+        :timeout="2000"
+    >
+        {{ message }}
+    </v-snackbar>
     <v-flex xs12 sm8 md4 h-100 w-100 style="margin-left: 35%">
         <v-card 
             class="elevation-6" 
@@ -82,12 +91,10 @@ export default {
             let canLogin = true;
             if(!this.email.trim()){
                 canLogin = false;
-                this.$snotifyWarning({}, "Email không được để trống");
             }
 
             if(!this.password.trim()){
                 canLogin = false;
-                this.$snotifyWarning({}, "Mật khẩu không được để trống");
             }
 
             if(canLogin){
@@ -112,7 +119,8 @@ export default {
                             // }
                             this.$router.push("/home");
                         } else {
-                            this.$snotifyError( {}, "Không thể đăng nhập","Tài khoản hoặc mật khẩu không chính xác!");
+                            this.notify = true
+                            this.message = "Không thể đăng nhập. Tài khoản hoặc mật khẩu không chính xác!"
                         }
                     })
                     .catch(err => {
@@ -138,7 +146,9 @@ export default {
                 v => !!v || "Email không được để trống",
                 v => /.+@.+\..+/.test(v) || "Email không hợp lệ"
             ],
-            passwordRules: [v => !!v || "Mật khẩu không được để trống"]
+            passwordRules: [v => !!v || "Mật khẩu không được để trống"],
+            notify: false,
+            message: ''
         };
     }
 };

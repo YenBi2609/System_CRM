@@ -4,10 +4,8 @@
     <v-navigation-drawer
       v-model="drawer"
       :clipped="$vuetify.breakpoint.lgAndUp"
-      app
-      dark
+      app     
       hide-overlay
-      :src="bg"
     >
       <v-list dense>
         <template v-for="item in items">
@@ -59,9 +57,8 @@
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       app
-      color="primary"
-      dark
-      :src="bg"
+      color="white"
+      dense
     >
       <v-toolbar-title style="width: 300px" class="ml-0">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -78,19 +75,30 @@
             v-model="q"
             flat
             hide-details
-            solo-inverted
+            outlined
             prepend-inner-icon="mdi-magnify"
-            label="Search"
+            placeholder="Search"
+            dense
+            color="#f58634"
           ></v-text-field>
         </v-form>
       </v-row>
 
       <v-spacer></v-spacer>
-
-      <span class="mx-2">{{ username }}</span>
-      <v-btn icon @click="signOut">
-        <v-icon>mdi-power</v-icon>
-      </v-btn>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn 
+                small
+                icon 
+                @click="signOut"
+                v-bind="attrs"
+                v-on="on"
+                >
+                    <v-icon>mdi-power</v-icon>
+                </v-btn>
+            </template>
+            <span>Đăng xuất</span>
+        </v-tooltip>
     </v-app-bar>
 
     <v-main>
@@ -239,7 +247,7 @@ export default {
       this.$router.push({ name: 'search___en', query: { q: this.q } })
     },
     signOut() {
-      this.$store.dispatch('auth/logout')
+      // this.$store.dispatch('auth/logout')
       this.$router.push('/')
     },
     getTasks() {
@@ -258,34 +266,5 @@ export default {
 </script>
 
 <style lang="scss">
-.v-navigation-drawer {
-  .v-list {
-    &-group--active {
-      .v-list-group__items {
-        background: #142430;
-      }
-      .v-list-group__header {
-        background: #142430;
-      }
-    }
-    .theme--dark {
-      .v-icon {
-        color: #fff !important;
-      }
-    }
-  }
-}
-.active-item {
-  position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.3 !important;
-    background-color: #fafafa !important;
-  }
-}
+
 </style>

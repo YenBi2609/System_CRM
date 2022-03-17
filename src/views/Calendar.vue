@@ -159,22 +159,28 @@ export default {
         events: [],
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+        listTask: []
     }
   },
   computed: {
-
+      // listTask(){
+      //     return this.$store.state.task.listTask;
+      // }
   },
   watch: {
 
   },
   created() {
-
+      this.$evtBus.$on('get-tasks', (task) => {
+debugger // eslint-disable-line
+        this.listTask = task
+      })
   },
   mounted() {
     this.$refs.calendar.checkChange()
   },
   methods: {
-          viewDay ({ date }) {
+    viewDay ({ date }) {
       this.focus = date
       this.type = 'day'
     },
@@ -230,7 +236,7 @@ export default {
       //     timed: !allDay,
       //   })
       // }
-          events.push({
+        events.push({
           name: 'a',
           start: '2022-03-15',
           end: '2022-03-15',

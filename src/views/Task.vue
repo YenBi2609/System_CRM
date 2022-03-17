@@ -62,7 +62,9 @@ export default {
         }
     },
     computed: {
-
+        listTasks(){
+            return this.$store.state.exportExcel.listFileExport;
+        },
     },
     watch: {
 
@@ -76,6 +78,10 @@ export default {
         async getTask(){
             let res = await taskApi.getTasks();
             this.listData = res.response;
+            debugger // eslint-disable-line
+            // this.$store.commit('task/handleAddTask', res.response);
+            this.$evtBus.$emit('get-tasks', res.response);
+
         },
         async addItem(item){
             let object  = {}

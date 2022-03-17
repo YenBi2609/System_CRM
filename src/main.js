@@ -5,12 +5,16 @@ import router from './router'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 import "./assets/css/main.css";
+import store from "./store";
 // import i18n from './lang/i18n'
+// import Vuex from 'vuex';
 
 Vue.config.productionTip = false
+// Vue.use(Vuex);
 
 new Vue({
     router,
+    store,
     vuetify,
     render: h => h(App)
 }).$mount('#app')

@@ -50,7 +50,7 @@ export default {
                 { text: 'Vai trò', value: 'role' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
-            listData: [],
+            // listData: [],
             defaultItem: [
                 { text: 'Tên nhân viên',value: '', key: 'name' },
                 { text: 'Số điện thoại',value: '', key: 'phoneNumber' },
@@ -64,21 +64,18 @@ export default {
         }
     },
     computed: {
-
+      listData(){
+          return this.$store.state.allUser;
+      }
     },
     watch: {
 
     },
 
     created () {
-        this.getUser();
     },
 
     methods: {
-        async getUser(){
-            let res = await userApi.getUsers();
-            this.listData = res.response;
-        },
         async addItem(item){
             let object  = {}
             item.map(index=>{
@@ -101,6 +98,7 @@ export default {
             Object.assign(this.listData[data.index], object)
             try{
                 await userApi.updateUsers(this.listData[data.index].id, object);
+                this.$store.commit('handleGetUser', this.listData);
             }
             catch(err){
                 console.log(err)
@@ -111,6 +109,7 @@ export default {
             try{
                 await userApi.deleteUsers(this.listData[index].id);
                 this.listData.splice(index, 1)
+                this.$store.commit('handleGetUser', this.listData);
             }
             catch(err){
                 console.log(err)

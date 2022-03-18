@@ -120,6 +120,8 @@
 <script>
 // import ModalNotDoneTasks from '@/components/layout/ModalNotDoneTasks'
 import { taskApi } from '@/api/task';
+import { clientApi } from '@/api/client';
+import { userApi } from '@/api/user';
 export default {
   name: 'Home',
   components: { 
@@ -192,15 +194,22 @@ export default {
   },
   mounted() {
     // if (this.isGranted('ROLE_TASK_LIST')) {
-      this.getTask()
+      this.getData()
     // }
 
     this.initActiveMenuItem()
   },
   methods: {
-    async getTask(){
-        let res = await taskApi.getTasks();
-        this.$store.commit('handleGetTask', res.response);
+    async getData(){
+        // get task
+        let task = await taskApi.getTasks();
+        this.$store.commit('handleGetTask', task.response);
+        // get client
+        let client = await clientApi.getClients();
+        this.$store.commit('handleGetClient', client.response);
+        // get user
+		let user = await userApi.getUsers();
+		this.$store.commit('handleGetUser', user.response);
     },
     initActiveMenuItem() {
       this.items.forEach((i) => {

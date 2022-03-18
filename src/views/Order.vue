@@ -57,11 +57,10 @@ export default {
                 { text: 'Trạng thái',value: '', key: 'status' },
                 { text: 'Mã khách hàng',value: '', key: 'idClient' },
                 { text: 'Ngày',value: '', key: 'date' },
-                { text: 'Mã nhân viên xử lý',value: '',key: 'idUser'},
+                { text: 'Mã nhân viên xử lý',value: '',key: 'idUser', type: 'autocomplete'},
                 { text: 'Tổng tiền',value: '', key: 'total' },
                 { text: 'Ghi chú',value: '', key: 'note' },
             ],
-
 
         }
     },

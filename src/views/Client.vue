@@ -48,7 +48,7 @@ export default {
                 { text: 'Email', value: 'email' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
-            listData: [],
+            // listData: [],
             defaultItem: [
                 { text: 'Tên khách hàng',value: '', key: 'name' },
                 { text: 'Số điện thoại',value: '', key: 'phoneNumber' },
@@ -60,20 +60,17 @@ export default {
         }
     },
     computed: {
-
+      listData(){
+          return this.$store.state.allClient;
+      }
     },
     watch: {
 
     },
     created () {
-        this.getClient();
     },
 
     methods: {
-        async getClient(){
-            let res = await clientApi.getClients();
-            this.listData = res.response;
-        },
         async addItem(item){
             let object  = {}
             item.map(index=>{
@@ -96,6 +93,7 @@ export default {
             Object.assign(this.listData[data.index], object)
             try{
                 await clientApi.updateClients(this.listData[data.index].id, object);
+                this.$store.commit('handleGetClient', this.listData);
             }
             catch(err){
                 console.log(err)
@@ -106,6 +104,7 @@ export default {
             try{
                 await clientApi.deleteClients(this.listData[index].id);
                 this.listData.splice(index, 1)
+                this.$store.commit('handleGetClient', this.listData);
             }
             catch(err){
                 console.log(err)

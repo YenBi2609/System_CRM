@@ -47,42 +47,35 @@ export default {
                 { text: 'Mức độ ưu tiên', value: 'priority' },
                 { text: 'Người thực thi', value: 'user' },
                 { text: 'Thời gian', value: 'duration' },
-                { text: 'Ngày đến hạn', value: 'date' },
+                { text: 'Ngày bắt đầu', value: 'start_date' },
+                { text: 'Ngày đến hạn', value: 'end_date' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
-            listData: [],
+            // listData: [],
             defaultItem: [
                 { text: 'Tên công việc', value: '',key: 'name' },
                 { text: 'Trạng thái', value: '',key: 'status' },
                 { text: 'Mức độ ưu tiên', value: '',key: 'priority' },
                 { text: 'Người thực thi', value: '',key: 'user' },
                 { text: 'Thời gian', value: '',key: 'duration' },
-                { text: 'Ngày đến hạn', value: '',key: 'date' },
+                { text: 'Ngày bắt đầu', value: '',key: 'start_date' },
+                { text: 'Ngày đến hạn', value: '',key: 'end_date' },
             ],
         }
     },
     computed: {
-        listTasks(){
-            return this.$store.state.exportExcel.listFileExport;
-        },
+      listData(){
+          return this.$store.state.listTask;
+      }
     },
     watch: {
 
     },
 
     created () {
-        this.getTask();
     },
 
     methods: {
-        async getTask(){
-            let res = await taskApi.getTasks();
-            this.listData = res.response;
-            debugger // eslint-disable-line
-            // this.$store.commit('task/handleAddTask', res.response);
-            this.$evtBus.$emit('get-tasks', res.response);
-
-        },
         async addItem(item){
             let object  = {}
             item.map(index=>{
@@ -91,12 +84,12 @@ export default {
 
             try{
                 await taskApi.addTasks(object);
+                object['id'] = this.listData[this.listData.length - 1].id + 1;
+                this.listData.push(object)
             }
             catch(err){
                 console.log(err)
             }
-            object['id'] = this.listData[this.listData.length - 1].id + 1;
-            this.listData.push(object)
         },
         async updateItem(data){
             let object  = {}
@@ -106,6 +99,7 @@ export default {
             Object.assign(this.listData[data.index], object)
             try{
                 await taskApi.updateTasks(this.listData[data.index].id, object);
+                this.$store.commit('handleGetTask', this.listData);
             }
             catch(err){
                 console.log(err)
@@ -116,6 +110,7 @@ export default {
             try{
                 await taskApi.deleteTasks(this.listData[index].id);
                 this.listData.splice(index, 1)
+                this.$store.commit('handleGetTask', this.listData);
             }
             catch(err){
                 console.log(err)

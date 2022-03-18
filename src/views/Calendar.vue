@@ -159,22 +159,17 @@ export default {
         events: [],
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
-        listTask: []
     }
   },
   computed: {
-      // listTask(){
-      //     return this.$store.state.task.listTask;
-      // }
+      listTask(){
+          return this.$store.state.listTask;
+      }
   },
   watch: {
 
   },
   created() {
-      this.$evtBus.$on('get-tasks', (task) => {
-debugger // eslint-disable-line
-        this.listTask = task
-      })
   },
   mounted() {
     this.$refs.calendar.checkChange()

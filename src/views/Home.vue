@@ -119,7 +119,7 @@
 
 <script>
 // import ModalNotDoneTasks from '@/components/layout/ModalNotDoneTasks'
-import bg from '../assets/bg.png'
+import { taskApi } from '@/api/task';
 export default {
   name: 'Home',
   components: { 
@@ -127,7 +127,6 @@ export default {
   },
   data() {
     return {
-      bg,
       q: null,
       tasks: [],
       dialog: false,
@@ -193,12 +192,16 @@ export default {
   },
   mounted() {
     // if (this.isGranted('ROLE_TASK_LIST')) {
-      this.getTasks()
+      this.getTask()
     // }
 
     this.initActiveMenuItem()
   },
   methods: {
+    async getTask(){
+        let res = await taskApi.getTasks();
+        this.$store.commit('handleGetTask', res.response);
+    },
     initActiveMenuItem() {
       this.items.forEach((i) => {
         if (i.children && i.children.length) {

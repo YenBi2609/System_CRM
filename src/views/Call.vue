@@ -1,5 +1,14 @@
 <template>
     <div >
+    <v-snackbar
+        top
+        light
+        v-model="notify"
+        color="#f58634"
+        :timeout="2000"
+    >
+        {{ message }}
+    </v-snackbar>
         <Table
         :object="object"
         :titleObject="titleObject"
@@ -45,7 +54,7 @@ export default {
                 { text: 'Số điện thoại', value: 'phoneNumber' },
                 { text: 'Mã khách hàng', value: 'idClient' },
                 { text: 'Tên khách hàng', value: 'clientName' },
-                { text: 'Thời gian', value: 'date' },
+                { text: 'Ngày', value: 'date' },
                 { text: 'Mã nhân viên gọi điện', value: 'idUser' },
                 { text: 'Nhân viên gọi điện', value: 'userName' },
                 { text: 'Ghi chú', value: 'note' },
@@ -53,11 +62,13 @@ export default {
             ],
             listData: [],
             defaultItem: [
-                { text: 'Mã khách hàng',value: '', key: 'idClient' },
-                { text: 'Thời gian',value: '', key: 'date' },
-                { text: 'Mã nhân viên gọi điện',value: '', key: 'idUser' },
+                { text: 'Khách hàng',value: '', key: 'idClient',type: 'autocomplete' },
+                { text: 'Ngày',value: '', key: 'date',type: 'date' },
+                { text: 'Nhân viên gọi điện',value: '', key: 'idUser',type: 'autocomplete' },
                 { text: 'Ghi chú',value: '', key: 'note' },
             ],
+            notify: false,
+            message: ''
         }
     },
     computed: {
@@ -69,6 +80,32 @@ export default {
 
     created () {
         this.getCall();
+        this.defaultItem.map(index => {
+            if(index.type == 'autocomplete'){
+                if(index.key == 'idUser'){
+                    let allUser = this.$store.state.allUser;
+                    let listValue = []
+                    allUser.map(user=>{
+                        let object = {}
+                        object['id'] =  user.id
+                        object['title'] =  user.id + ' ' +user.name
+                        listValue.push(object)
+                    })
+                    index['listValue'] = listValue
+                }
+                if(index.key == 'idClient'){
+                    let allClient = this.$store.state.allClient;
+                    let listValue = []
+                    allClient.map(client=>{
+                        let object = {}
+                        object['id'] =  client.id
+                        object['title'] =  client.id + ' ' +client.name
+                        listValue.push(object)
+                    })
+                    index['listValue'] = listValue
+                }
+            }
+        })
     },
 
     methods: {
@@ -83,12 +120,31 @@ export default {
             })
             try{
                 await callApi.addCalls(object);
+                debugger // eslint-disable-line
+                // tự động tăng số thứ tự
+                object['id'] = this.listData[this.listData.length - 1].id + 1;
+
+                let allClient = this.$store.state.allClient;
+                allClient.map(client=>{
+                    if(client.id == object.idClient){
+                        object['clientName'] = client.name
+                    }
+                })
+
+                let allUser = this.$store.state.allUser;
+                allUser.map(user=>{
+                    if(user.id == object.idUser){
+                        object['userName'] = user.name
+                        object['phoneNumber'] = user.phoneNumber
+                    }
+                })
+                this.listData.push(object)
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }
-            object['id'] = this.listData[this.listData.length - 1].id + 1;
-            this.listData.push(object)
         },
         async updateItem(data){
             let object  = {}
@@ -101,6 +157,8 @@ export default {
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }            
         },
         async deleteItem(index){
@@ -111,6 +169,8 @@ export default {
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }
         }
     }

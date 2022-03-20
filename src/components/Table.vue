@@ -1,6 +1,15 @@
 <template>
 <div >
   <v-app >
+    <v-snackbar
+        top
+        light
+        v-model="notify"
+        color="#f58634"
+        :timeout="2000"
+    >
+        {{ message }}
+    </v-snackbar>
     <v-data-table
       :headers="headers"
       :items="listData"
@@ -36,7 +45,7 @@
                 {{action.add}}
               </v-btn>
             </template>
-            <v-card>
+            <v-card v-if="dialog">
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
@@ -45,9 +54,29 @@
                 <!-- <v-container> -->
                   <div v-for="item in editedItem" :key="item.key">
                       <v-text-field
+                        v-if="!item.type"
                         v-model="item.value"
                         :label="item.text"
                         :rules="[rules.required]"
+                      ></v-text-field>
+                      <v-autocomplete
+                        v-if="item.type=='autocomplete'"
+                        v-model="item.value"
+                        :items="item.listValue"
+                        dense
+                        chips
+                        small-chips
+                        :label="item.text"
+                        item-text="title"
+                        item-value="id"
+                        :rules="[rules.required]"
+                      ></v-autocomplete>
+                      <v-text-field
+                        v-if="item.type=='number'"
+                        v-model="item.value"
+                        :label="item.text"
+                        :rules="[rules.required]"
+                        type="number"
                       ></v-text-field>
                   </div>
               </v-card-text>
@@ -184,6 +213,9 @@ export default {
       rules: {
           required: value => !!value || 'Vui lòng nhập đủ thông tin!',
       },
+      listValue: [],
+      notify: false,
+      message: ''
     }
   },
   computed: {
@@ -192,21 +224,26 @@ export default {
     },
   },
  watch: {
-    dialog (val) {
-      val || this.close()
-    },
-    dialogDelete (val) {
-      val || this.closeDelete()
-    },
+    // dialog (val) {
+    //   val || this.close()
+    // },
+    // dialogDelete (val) {
+    //   val || this.closeDelete()
+    // },
   },
 
   created () {
       this.defaultItem.map(index => {
-          this.editedItem.push({
+        let data = {
             key: index.key,
             value:index.value,
             text: index.text
-          }) 
+        }
+        if(index.type == 'autocomplete'){
+          data.type =  index.type
+          data.listValue = index.listValue
+        }
+        this.editedItem.push(data) 
       })
   },
 
@@ -250,11 +287,16 @@ export default {
       this.dialog = false
       this.editedItem = []
       this.defaultItem.map(index => {
-          this.editedItem.push({
+        let data = {
             key: index.key,
             value:index.value,
             text: index.text
-          }) 
+        }
+        if(index.type){
+          data.type =  index.type
+          data.listValue = index.listValue
+        }
+        this.editedItem.push(data) 
       })
       this.editedIndex = -1
     },
@@ -264,20 +306,36 @@ export default {
     },
 
     save () {
-      let check = true;
+      let checkEmpty = true;
       this.editedItem.map(item =>{
         if(item.value == ''){
-          check = false
+          checkEmpty = false
         }
       })
-      if(check){
-        if (this.editedIndex > -1) {
-          this.$emit('update-item', {index: this.editedIndex, item: this.editedItem})
-        } else {
-          this.$emit('add-item', this.editedItem)
+      if(checkEmpty){
+        let checkValid = true;
+        this.editedItem.map(item =>{
+          if(item.key == 'email'){
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            checkValid = pattern.test(item.value)
+          }
+        })
+        if(checkValid){
+          if (this.editedIndex > -1) {
+            this.$emit('update-item', {index: this.editedIndex, item: this.editedItem})
+          } else {
+            this.$emit('add-item', this.editedItem)
+          }
+          this.close()         
+        }else {
+          this.notify = true
+          this.message = "Email không hợp lệ, vui lòng kiểm tra lại!"
         }
-        this.close()
+      }else {
+        this.notify = true
+        this.message = "Vui lòng nhập đủ thông tin!"
       }
+
     },
   }
 }

@@ -1,5 +1,14 @@
 <template>
     <div >
+    <v-snackbar
+        top
+        light
+        v-model="notify"
+        color="#f58634"
+        :timeout="2000"
+    >
+        {{ message }}
+    </v-snackbar>
         <Table
         :object="object"
         :titleObject="titleObject"
@@ -53,10 +62,12 @@ export default {
             defaultItem: [
                 { text: 'Tên sản phẩm',value: '', key: 'name' },
                 { text: 'Mô tả',value: '', key: 'description' },
-                { text: 'Giá bán',value: '', key: 'price' },
-                { text: 'Giá nhập',value: '', key: 'cost' },
-                { text: 'Số lượng',value: '', key: 'quantity' },
+                { text: 'Giá bán',value: '', key: 'price',type:'number' },
+                { text: 'Giá nhập',value: '', key: 'cost',type:'number'},
+                { text: 'Số lượng',value: '', key: 'quantity', type:'number' },
             ],
+            notify: false,
+            message: ''
 
 
         }
@@ -84,12 +95,14 @@ export default {
             })
             try{
                 await productApi.addProducts(object);
+                object['id'] = this.listData[this.listData.length - 1].id + 1;
+                this.listData.push(object)
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }
-            object['id'] = this.listData[this.listData.length - 1].id + 1;
-            this.listData.push(object)
         },
         async updateItem(data){
             let object  = {}
@@ -102,6 +115,8 @@ export default {
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }            
         },
         async deleteItem(index){
@@ -112,6 +127,8 @@ export default {
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }
         }
     }

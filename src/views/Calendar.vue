@@ -103,22 +103,25 @@
                 :color="selectedEvent.color"
                 dark
               >
-                <v-btn icon>
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
               </v-toolbar>
-              <v-card-text>
-                <span v-html="selectedEvent.details"></span>
-              </v-card-text>
+                <v-card-text>
+                  <p>
+                    Ngày đến hạn: {{ selectedEvent.start}}
+                  </p>
+                  <p>
+                    Người thực thi: {{ selectedEvent.user}}
+                  </p>
+                </v-card-text>
               <v-card-actions>
+                <v-btn
+                    text
+                    color="success"
+                    :to="{ name: 'TaskShow', params: { id: selectedEvent.id } }"
+                  >
+                    Xem chi tiết
+                  </v-btn>
                 <v-btn
                   text
                   color="secondary"
@@ -231,12 +234,16 @@ export default {
       //     timed: !allDay,
       //   })
       // }
-        events.push({
-          name: 'a',
-          start: '2022-03-15',
-          end: '2022-03-15',
-          color: 'blue',
+        this.listTask.map(task=>{
+          events.push({
+            name: task.name,
+            start: task.start_date,
+            end: task.end_date,
+            color: 'blue',
+            user: task.userName
+          })          
         })
+
 
       this.events = events
     },

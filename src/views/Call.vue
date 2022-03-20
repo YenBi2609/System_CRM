@@ -120,7 +120,6 @@ export default {
             })
             try{
                 await callApi.addCalls(object);
-                debugger // eslint-disable-line
                 // tự động tăng số thứ tự
                 object['id'] = this.listData[this.listData.length - 1].id + 1;
 

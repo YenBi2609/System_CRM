@@ -54,7 +54,8 @@ export default {
                 { text: 'Tên công việc', value: 'name' },
                 { text: 'Trạng thái', value: 'status' },
                 { text: 'Mức độ ưu tiên', value: 'priority' },
-                { text: 'Người thực thi', value: 'user' },
+                { text: 'Mã người thực thi', value: 'idUser' },
+                { text: 'Tên người thực thi', value: 'userName' },
                 { text: 'Thời gian', value: 'duration' },
                 { text: 'Ngày bắt đầu', value: 'start_date' },
                 { text: 'Ngày đến hạn', value: 'end_date' },
@@ -64,8 +65,8 @@ export default {
                 { text: 'Tên công việc', value: '',key: 'name' },
                 { text: 'Trạng thái', value: '',key: 'status' },
                 { text: 'Mức độ ưu tiên', value: '',key: 'priority' },
-                { text: 'Người thực thi', value: '',key: 'user', type: 'autocomplete'},
-                { text: 'Thời gian', value: '',key: 'duration' },
+                { text: 'Người thực thi', value: '',key: 'idUser', type: 'autocomplete'},
+                { text: 'Thời gian', value: '',key: 'duration', type: 'number' },
                 { text: 'Ngày bắt đầu', value: '',key: 'start_date', type:'date' },
                 { text: 'Ngày đến hạn', value: '',key: 'end_date',type:'date' },
             ],
@@ -85,7 +86,7 @@ export default {
     created () {
         this.defaultItem.map(index => {
             if(index.type == 'autocomplete'){
-                if(index.key == 'user'){
+                if(index.key == 'idUser'){
                     let allUser = this.$store.state.allUser;
                     let listValue = []
                     allUser.map(user=>{
@@ -110,6 +111,14 @@ export default {
             try{
                 await taskApi.addTasks(object);
                 object['id'] = this.listData[this.listData.length - 1].id + 1;
+
+                let allUser = this.$store.state.allUser;
+                allUser.map(user=>{
+                    if(user.id == object.idUser){
+                        object['userName'] = user.name
+                    }
+                })
+
                 this.listData.push(object)
             }
             catch(err){

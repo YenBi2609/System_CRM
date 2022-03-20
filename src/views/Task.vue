@@ -1,5 +1,14 @@
 <template>
     <div >
+    <v-snackbar
+        top
+        light
+        v-model="notify"
+        color="#f58634"
+        :timeout="2000"
+    >
+        {{ message }}
+    </v-snackbar>
         <Table
         :object="object"
         :titleObject="titleObject"
@@ -51,16 +60,17 @@ export default {
                 { text: 'Ngày đến hạn', value: 'end_date' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
-            // listData: [],
             defaultItem: [
                 { text: 'Tên công việc', value: '',key: 'name' },
                 { text: 'Trạng thái', value: '',key: 'status' },
                 { text: 'Mức độ ưu tiên', value: '',key: 'priority' },
-                { text: 'Người thực thi', value: '',key: 'user' },
+                { text: 'Người thực thi', value: '',key: 'user', type: 'autocomplete'},
                 { text: 'Thời gian', value: '',key: 'duration' },
-                { text: 'Ngày bắt đầu', value: '',key: 'start_date' },
-                { text: 'Ngày đến hạn', value: '',key: 'end_date' },
+                { text: 'Ngày bắt đầu', value: '',key: 'start_date', type:'date' },
+                { text: 'Ngày đến hạn', value: '',key: 'end_date',type:'date' },
             ],
+            notify: false,
+            message: ''
         }
     },
     computed: {
@@ -73,6 +83,21 @@ export default {
     },
 
     created () {
+        this.defaultItem.map(index => {
+            if(index.type == 'autocomplete'){
+                if(index.key == 'user'){
+                    let allUser = this.$store.state.allUser;
+                    let listValue = []
+                    allUser.map(user=>{
+                        let object = {}
+                        object['id'] =  user.id
+                        object['title'] =  user.id + ' ' +user.name
+                        listValue.push(object)
+                    })
+                    index['listValue'] = listValue
+                }
+            }
+        })
     },
 
     methods: {
@@ -89,6 +114,8 @@ export default {
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }
         },
         async updateItem(data){
@@ -103,6 +130,8 @@ export default {
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }            
         },
         async deleteItem(index){
@@ -114,6 +143,8 @@ export default {
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }
         }
     }

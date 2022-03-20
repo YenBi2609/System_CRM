@@ -78,6 +78,13 @@
                         :rules="[rules.required]"
                         type="number"
                       ></v-text-field>
+                      <v-text-field
+                        v-if="item.type=='date'"
+                        v-model="item.value"
+                        :label="item.text"
+                        :rules="[rules.required]"
+                        type="date"
+                      ></v-text-field>
                   </div>
               </v-card-text>
   
@@ -215,7 +222,8 @@ export default {
       },
       listValue: [],
       notify: false,
-      message: ''
+      message: '',
+      isShowDialogDate: false,
     }
   },
   computed: {
@@ -239,8 +247,10 @@ export default {
             value:index.value,
             text: index.text
         }
-        if(index.type == 'autocomplete'){
+        if(index.type){
           data.type =  index.type
+        }
+        if(index.type == 'autocomplete'){
           data.listValue = index.listValue
         }
         this.editedItem.push(data) 
@@ -255,20 +265,25 @@ export default {
       this.editedIndex = this.listData.indexOf(item);
 
         for(let key in item){
-            let text = '';
-            this.defaultItem.map(index => {
-              if(index.key == key){
-                text = index.text
-              }
-            })
-            if(text != ''){
-              this.editedItem.push({
+            let obj = {
                 key: key,
                 value:item[key],
-                text: text
-              })              
+                text: ''
             }
-
+            this.defaultItem.map(index => {
+              if(index.key == key){
+                obj.text = index.text
+                if(index.type){
+                  obj['type'] =  index.type
+                }
+                if(index.type == 'autocomplete'){
+                  obj['listValue'] = index.listValue
+                }
+              }
+            })
+            if(obj.text != ''){
+              this.editedItem.push(obj)              
+            }
         }
       this.dialog = true
     },
@@ -294,6 +309,8 @@ export default {
         }
         if(index.type){
           data.type =  index.type
+        }
+        if(index.type == 'autocomplete'){
           data.listValue = index.listValue
         }
         this.editedItem.push(data) 

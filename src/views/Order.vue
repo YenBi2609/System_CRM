@@ -1,5 +1,14 @@
 <template>
     <div >
+    <v-snackbar
+        top
+        light
+        v-model="notify"
+        color="#f58634"
+        :timeout="2000"
+    >
+        {{ message }}
+    </v-snackbar>
         <Table
         :object="object"
         :titleObject="titleObject"
@@ -57,10 +66,12 @@ export default {
                 { text: 'Trạng thái',value: '', key: 'status' },
                 { text: 'Mã khách hàng',value: '', key: 'idClient' },
                 { text: 'Ngày',value: '', key: 'date' },
-                { text: 'Mã nhân viên xử lý',value: '',key: 'idUser', type: 'autocomplete'},
+                { text: 'Nhân viên xử lý',value: '',key: 'idUser', type: 'autocomplete'},
                 { text: 'Tổng tiền',value: '', key: 'total' },
                 { text: 'Ghi chú',value: '', key: 'note' },
             ],
+            notify: false,
+            message: ''
 
         }
     },
@@ -73,6 +84,21 @@ export default {
 
     created () {
         this.getOrder();
+        this.defaultItem.map(index => {
+            if(index.type == 'autocomplete'){
+                if(index.key == 'idUser'){
+                    let allUser = this.$store.state.allUser;
+                    let listValue = []
+                    allUser.map(user=>{
+                        let object = {}
+                        object['id'] =  user.id
+                        object['title'] =  user.id + ' ' +user.name
+                        listValue.push(object)
+                    })
+                    index['listValue'] = listValue
+                }
+            }
+      })
     },
 
     methods: {
@@ -87,12 +113,14 @@ export default {
             })
             try{
                 await orderApi.addOrders(object);
+                object['id'] = this.listData[this.listData.length - 1].id + 1;
+                this.listData.push(object)
             }
             catch(err){
                 console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }
-            object['id'] = this.listData[this.listData.length - 1].id + 1;
-            this.listData.push(object)
         },
         async updateItem(data){
             let object  = {}

@@ -1,26 +1,23 @@
 <template>
     <div>
+    <v-snackbar
+        top
+        light
+        v-model="notify"
+        color="#f58634"
+        :timeout="2000"
+    >
+        {{ message }}
+    </v-snackbar>
         <h3>Thông tin đơn hàng</h3>
         <v-form>
             <v-container>
                 <v-row>
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="4"
-                    >
-                        <v-text-field
-                        dense
-                        label="Mã đơn hàng"
-                        disabled
-                        v-model="order.id"
-                        ></v-text-field>
-                    </v-col>
         
                     <v-col
                         cols="12"
                         sm="6"
-                        md="4"
+                        md="6"
                     >
                         <v-autocomplete
                         v-model="order.client.value"
@@ -36,7 +33,7 @@
                       <v-col
                         cols="12"
                         sm="6"
-                        md="4"
+                        md="6"
                     >
                         <v-autocomplete
                         v-model="order.user.value"
@@ -66,7 +63,7 @@
                     <v-col
                         cols="12"
                         sm="6"
-                        md="4"
+                        md="6"
                     >
                         <v-text-field
                         dense
@@ -262,7 +259,7 @@ export default {
   },
   data() {
     return {
-      productSelected: [2, 3],
+      productSelected: [],
       listProduct: [],
       listStatus: ['Pending', 'New'],
       order: {
@@ -282,7 +279,9 @@ export default {
             total: 0,
             }
         ]
-      }
+      },
+        notify: false,
+        message: ''
     }
   },
   computed: {
@@ -334,7 +333,7 @@ export default {
         object['title'] =  user.id + ' ' +user.name
         listValue.push(object)
     })
-    this.order.client['listValue'] = listValue
+    this.order.user['listValue'] = listValue
 
     // get user
     let allClient = this.$store.state.allClient;
@@ -345,10 +344,15 @@ export default {
         object['title'] =  client.id + ' ' +client.name
         listValueClient.push(object)
     })
-    this.order.user['listValue'] = listValueClient
+    this.order.client['listValue'] = listValueClient
 
     // get product
     this.getProduct()
+
+    // get order
+    if(this.$route.name == 'OrderDetail'){
+        this.getOrder();
+    }
 
   },
   mounted() {
@@ -359,25 +363,64 @@ export default {
         let res = await productApi.getProducts();
         this.listProduct = res.response;
     },
+    async getOrder(){
+
+        let res = await orderDetailApi.getOrders(this.$route.params.id);
+        this.order.status = res.listObject[0].orders.status;
+        this.order.client.value = res.listObject[0].orders.idClient;
+        this.order.user.value = res.listObject[0].orders.idUser;
+        this.order.date = res.listObject[0].orders.date;
+        this.order.note = res.listObject[0].orders.note;
+        this.order.total = res.listObject[0].orders.total;
+        res.listObject.map(obj =>{
+            this.order.listProduct.push({
+                idProduct: obj.idProduct,
+                name: obj.productName,
+                price: obj.products.price,
+                quantity: obj.quantity,
+                discount: obj.discount,
+                total: obj.total
+            })
+            this.productSelected.push(obj.idProduct)
+        })
+
+    },
     backToList(){
         this.$router.push("/order");
     },
     async save(){
-        // tạo
-        // let object  = {}
-        //     item.map(index=>{
-        //         object[index.key] = index.value
-        // })
-        // try{
-        //     await orderApi.addOrders(object);
-        //     object['id'] = this.listData[this.listData.length - 1].id + 1;
-        //     this.listData.push(object)
-        // }
-        // catch(err){
-        //     console.log(err)
-        //     this.notify = true
-        //     this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
-        // }
+        if(this.$route.name == 'OrderDetail'){
+            console.log(this.order)
+        }else {
+            let order  = {
+                idClient : this.order.client.value,
+                idUser : this.order.user.value,
+                date: this.order.date,
+                status: this.order.status,
+                total: this.order.total,
+                note: this.order.note
+            }
+                
+            try{
+                var res = await orderApi.addOrders(order);
+                this.order.listProduct.map(async (product)=>{
+                    let orderDetail = {
+                        idOrder: res.data.data.id,
+                        idProduct: product.idProduct,
+                        quantity: product.quantity,
+                        discount: product.discount,
+                        total: product.total
+                    }
+                    await orderDetailApi.addOrderDetails(orderDetail);
+                    this.$router.push("/order");
+                })
+            }
+            catch(err){
+                console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
+            }
+        }
     }
   }
 }

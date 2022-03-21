@@ -266,9 +266,11 @@ export default {
 
     editItem (item) {
       this.editedItem = []
-
       this.editedIndex = this.listData.indexOf(item);
 
+      if(this.isOrder){
+        this.$router.push("/order/detail/"+item.id);
+      }else {
         for(let key in item){
             let obj = {
                 key: key,
@@ -290,7 +292,8 @@ export default {
               this.editedItem.push(obj)              
             }
         }
-      this.dialog = true
+        this.dialog = true
+      }
     },
 
     deleteItem (item) {

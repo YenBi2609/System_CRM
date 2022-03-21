@@ -19,6 +19,7 @@
         @add-item="addItem"
         @update-item="updateItem"
         @delete-item="deleteItem"
+        :isOrder="true"
         />
     </div>
 </template>

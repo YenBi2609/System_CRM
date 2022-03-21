@@ -41,11 +41,12 @@
                 class="mb-2"
                 v-bind="attrs"
                 v-on="on"
+                @click="addItem"
               >
                 {{action.add}}
               </v-btn>
             </template>
-            <v-card v-if="dialog">
+            <v-card v-if="dialog || !isOrder">
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
@@ -207,6 +208,10 @@ export default {
             return []
           }
         },
+        isOrder: {
+          type: Boolean,
+          default: false
+        }
     },
   data() {
     return {
@@ -354,6 +359,11 @@ export default {
       }
 
     },
+    addItem(){
+      if(this.isOrder){
+        this.$router.push("/order/new");
+      }
+    }
   }
 }
 </script>

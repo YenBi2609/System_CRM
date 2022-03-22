@@ -211,6 +211,10 @@ export default {
         isOrder: {
           type: Boolean,
           default: false
+        },
+        idTaskShow: {
+          type: Number,
+          default: 0
         }
     },
   data() {
@@ -260,6 +264,13 @@ export default {
         }
         this.editedItem.push(data) 
       })
+      if(this.idTaskShow != ''){
+        this.listData.map(task=>{
+          if(task.id == this.idTaskShow){
+            this.editItem(task)
+          }
+        })
+      }
   },
 
   methods: {
@@ -324,6 +335,9 @@ export default {
         this.editedItem.push(data) 
       })
       this.editedIndex = -1
+      if(this.$route.name == 'EditTask'){
+          this.$router.push("/task");
+      }
     },
 
     closeDelete () {

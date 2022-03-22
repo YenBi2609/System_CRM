@@ -19,6 +19,7 @@
         @add-item="addItem"
         @update-item="updateItem"
         @delete-item="deleteItem"
+        :idTaskShow="idTaskShow"
         />
     </div>
 </template>
@@ -71,7 +72,8 @@ export default {
                 { text: 'Ngày đến hạn', value: '',key: 'end_date',type:'date' },
             ],
             notify: false,
-            message: ''
+            message: '',
+            idTaskShow: ''
         }
     },
     computed: {
@@ -99,6 +101,9 @@ export default {
                 }
             }
         })
+        if(this.$route.name == 'EditTask'){
+            this.idTaskShow = this.$route.params.id
+        }
     },
 
     methods: {

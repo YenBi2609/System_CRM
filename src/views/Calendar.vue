@@ -118,9 +118,9 @@
                 <v-btn
                     text
                     color="success"
-                    :to="{ name: 'TaskShow', params: { id: selectedEvent.id } }"
+                    :to="{ name: 'EditTask', params: { id: selectedEvent.id } }"
                   >
-                    Xem chi tiết
+                    Chỉnh sửa
                   </v-btn>
                 <v-btn
                   text
@@ -240,7 +240,8 @@ export default {
             start: task.start_date,
             end: task.end_date,
             color: 'blue',
-            user: task.userName
+            user: task.userName,
+            id: task.id
           })          
         })
 
@@ -249,7 +250,7 @@ export default {
     },
     rnd (a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a
-    },
+    }
   }
 }
 </script>

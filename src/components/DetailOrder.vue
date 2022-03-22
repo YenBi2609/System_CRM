@@ -271,17 +271,18 @@ export default {
         note: '',
         total: '',
         listProduct: [
-            {idProduct: '',
-            name: '',
-            price: 0,
-            quantity: 0,
-            discount: 0,
-            total: 0,
-            }
+            // {idProduct: '',
+            // name: '',
+            // price: 0,
+            // quantity: 0,
+            // discount: 0,
+            // total: 0,
+            // }
         ]
       },
         notify: false,
-        message: ''
+        message: '',
+        listProductSaved: []
     }
   },
   computed: {
@@ -289,21 +290,24 @@ export default {
   },
   watch: {
       productSelected:{
-          immediate: true,
+        //   immediate: true,
           handler(){
-            this.order.listProduct = []
             this.productSelected.map(prd=>{
                 this.listProduct.map(p=>{
                     if(prd == p.id){
-                        this.order.listProduct.push(
-                            {idProduct: p.id,
-                            name: p.name,
-                            price: p.price,
-                            quantity: p.quantity,
-                            discount: 0,
-                            total: p.price * p.quantity,
-                            }                        
-                        )
+                        this.order.listProduct.map(prdSelected=>{
+                            if(prdSelected.idProduct != prd){
+                                this.order.listProduct.push(
+                                    {idProduct: p.id,
+                                    name: p.name,
+                                    price: p.price,
+                                    quantity: p.quantity,
+                                    discount: 0,
+                                    total: p.price * p.quantity,
+                                    }                
+                                )
+                            }
+                        })
                     }
                 })
             })
@@ -381,6 +385,7 @@ export default {
                 discount: obj.discount,
                 total: obj.total
             })
+            this.listProductSaved.push(obj.id)
             this.productSelected.push(obj.idProduct)
         })
 
@@ -389,21 +394,50 @@ export default {
         this.$router.push("/order");
     },
     async save(){
+        let order  = {
+            idClient : this.order.client.value,
+            idUser : this.order.user.value,
+            date: this.order.date,
+            status: this.order.status,
+            total: this.order.total,
+            note: this.order.note
+        }
+        //update
         if(this.$route.name == 'OrderDetail'){
-            console.log(this.order)
-        }else {
-            let order  = {
-                idClient : this.order.client.value,
-                idUser : this.order.user.value,
-                date: this.order.date,
-                status: this.order.status,
-                total: this.order.total,
-                note: this.order.note
-            }
                 
             try{
-                var res = await orderApi.addOrders(order);
+                await orderApi.updateOrders(this.$route.params.id, order);
+                this.listProductSaved.map(async (prdSaved)=>{
+                    // xóa hết chi tiết đơn hàng cũ
+                    await orderDetailApi.deleteOrderDetails(prdSaved); 
+                })
+
+                // add lại
                 this.order.listProduct.map(async (product)=>{
+        
+                    let orderDetail = {
+                        idOrder: this.$route.params.id,
+                        idProduct: product.idProduct,
+                        quantity: product.quantity,
+                        discount: product.discount,
+                        total: product.total
+                    }
+                    await orderDetailApi.addOrderDetails(orderDetail);
+                })                          
+                this.$router.push("/order");
+            }
+            catch(err){
+                console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
+            }
+        }else {
+            // add new
+                
+            try{
+                let res = await orderApi.addOrders(order);
+                this.order.listProduct.map(async (product)=>{
+        
                     let orderDetail = {
                         idOrder: res.data.data.id,
                         idProduct: product.idProduct,
@@ -412,8 +446,8 @@ export default {
                         total: product.total
                     }
                     await orderDetailApi.addOrderDetails(orderDetail);
-                    this.$router.push("/order");
                 })
+                this.$router.push("/order");
             }
             catch(err){
                 console.log(err)

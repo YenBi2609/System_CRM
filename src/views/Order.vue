@@ -27,6 +27,7 @@
 <script>
 import Table from '@/components/Table.vue'
 import { orderApi } from '@/api/order';
+import { orderDetailApi } from '@/api/orderDetail';
 
 export default {
     name: 'Order',
@@ -139,6 +140,12 @@ export default {
         async deleteItem(index){
 
             try{
+                // xóa chi tiết đơn hàng
+                let res = await orderDetailApi.getOrders(this.listData[index].id);
+                for(let a = 0; a < res.listObject.length; a ++){
+                    await orderDetailApi.deleteOrderDetails(res.listObject[a].id);
+                }
+                // xóa đơn hàng
                 await orderApi.deleteOrders(this.listData[index].id);
                 this.listData.splice(index, 1)
             }

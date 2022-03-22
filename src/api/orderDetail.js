@@ -10,7 +10,10 @@ export const orderDetailApi = {
     getOrders(id, data) {
         return coreApi.get('show-orderDetail/'+ id,data)
     },
-    // deleteOrders(id) {
-    //     return coreApi.del('delete-order/'+ id)
-    // }, 
+    updateOrderDetails(id, data) {
+        return coreApi.put('update-orderDetail/'+ id,data)
+    },
+    deleteOrderDetails(id) {
+        return coreApi.del('delete-orderDetail/'+ id)
+    }, 
 }

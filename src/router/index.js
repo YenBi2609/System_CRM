@@ -54,7 +54,12 @@ const routes = [
     path: '/task/:id',
     name: 'EditTask',
     component: () => import('../views/Task.vue')
-  }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('../views/Dashboard.vue')
+  },
 ]
 
 const router = new VueRouter({

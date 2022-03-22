@@ -118,7 +118,7 @@ export default {
                             //     this.$router.push('/');
                             // }
                             this.$store.commit('updateCurentUser', res.data.user[0]);
-                            this.$router.push("/home");
+                            this.$router.push("/dashboard");
                         } else {
                             this.notify = true
                             this.message = "Không thể đăng nhập. Tài khoản hoặc mật khẩu không chính xác!"

@@ -6,7 +6,8 @@ export default new Vuex.Store({
     state: {
         listTask: [],
         allUser: [],
-        allClient: []
+        allClient: [],
+        currentUser: {}
     },
     mutations: {
         handleGetTask(state, task){
@@ -17,6 +18,9 @@ export default new Vuex.Store({
         },
         handleGetClient(state, client){
             state.allClient = client
+        },
+        updateCurentUser(state, user){
+            state.currentUser = user
         },
     }
 });

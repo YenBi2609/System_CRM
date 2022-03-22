@@ -117,6 +117,7 @@ export default {
                             // }else{
                             //     this.$router.push('/');
                             // }
+                            this.$store.commit('updateCurentUser', res.data.user[0]);
                             this.$router.push("/home");
                         } else {
                             this.notify = true

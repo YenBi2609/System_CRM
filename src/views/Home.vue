@@ -85,6 +85,7 @@
       </v-row>
 
       <v-spacer></v-spacer>
+        <span style="color:#f58634;">{{username}}</span>
         <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn 
@@ -180,7 +181,8 @@ export default {
   },
   computed: {
     username() {
-      return 'Mrs.Yen'
+      return this.$store.state.currentUser.name;
+
     },
   },
   watch: {

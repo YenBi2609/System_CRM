@@ -9,7 +9,7 @@
         :options="options"
       />
     </v-card-text>
-    <v-card-actions>
+    <!-- <v-card-actions>
       <v-container fluid>
         <v-row align="start" justify="start" class="flex-column">
           <v-col v-for="(item, key) in labels" :key="item.id" cols="12">
@@ -23,7 +23,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-card-actions>
+    </v-card-actions> -->
   </v-card>
 </template>
 
@@ -59,7 +59,7 @@ export default {
         datasets: [
           {
             backgroundColor: this.colors,
-            hoverBackgroundColor: this.colors,
+            // hoverBackgroundColor: this.colors,
             data: this.values,
           },
         ],
@@ -97,9 +97,9 @@ export default {
     },
   },
   methods: {
-    colorByKey(key) {
-      return this.colors[key]
-    },
+    // colorByKey(key) {
+    //   return this.colors[key]
+    // },
   },
 }
 </script>

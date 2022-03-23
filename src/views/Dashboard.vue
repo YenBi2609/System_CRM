@@ -18,23 +18,11 @@
         </v-row>
 
         <v-row>
-            <v-col md="4" sm="6" xs="12">
-                <doughnut-box :title="chart[1].title" :data="chart[1].data" />
+            <v-col md="6" sm="12">
+                <doughnut-box :title="chart[2].title" :data="chart[2].data" />
             </v-col>
-            <v-col md="4" sm="6" xs="12">
-                <line-box :title='chart[1].title' :data="chart[1].data" />
-            </v-col>
-            <v-col md="4" sm="6" xs="12">
-
-            </v-col>
-            <v-col md="4" sm="6" xs="12">
-
-            </v-col>
-            <v-col md="4" sm="6" xs="12">
-
-            </v-col>
-            <v-col md="4" sm="6" xs="12">
-
+            <v-col md="6" sm="12">
+                <line-box :title='chart[3].title' :data="chart[3].data" />
             </v-col>
         </v-row>
     </v-container>
@@ -46,6 +34,8 @@ import { orderApi } from '@/api/order'
 import BarBox from '@/components/chart/box/BarBox'
 import DoughnutBox from '@/components/chart/box/DoughnutBox'
 import LineBox from '@/components/chart/box/LineBox'
+import { productApi } from '@/api/product';
+
 export default {
   name: 'Dashboard',
   components: { 
@@ -58,14 +48,16 @@ export default {
         chart: [
             {title: 'Tốc độ tăng trưởng doanh thu', data: []},
             {title: 'Tốc độ tăng trưởng đơn hàng', data: []},
-            {title: '3', data: []},
-            {title: '4', data: []},
+            {title: 'Sản phẩm tồn kho', data: []},
+            {title: 'Tốc độ tăng trưởng khách hàng', data: []},
         ],
 
     }
   },
   computed: {
-
+      listClient(){
+          return this.$store.state.allClient;
+      }
   },
   watch: {
 
@@ -73,6 +65,8 @@ export default {
   created() {
     
     this.getOrder();
+    this.getProduct();
+    this.customReportForClient();
   },
   mounted() {
 
@@ -103,6 +97,35 @@ export default {
                 {name: key, cnt: chart2[key]}
             )            
         }
+    },
+    async getProduct(){
+        let res = await productApi.getProducts();
+        res.response.map(product=>{
+            this.chart[2].data.push(
+                {name: product.name, cnt: product.quantity}
+            ) 
+        })
+
+    },
+    customReportForClient(){
+        let chart4 = {}
+        this.listClient.map(client=>{
+
+            if(chart4[client.created_at] != undefined){
+                client.created_at = client.created_at.slice(0, 10)
+                chart4[client.created_at] += 1
+            }  
+            else {
+                client.created_at = client.created_at.slice(0, 10)
+                chart4[client.created_at] = 1
+            }
+        })
+        for(let key in chart4){
+            this.chart[3].data.push(
+                {name: key, cnt: chart4[key]}
+            )            
+        }
+
     },
   }
 }

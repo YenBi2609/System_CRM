@@ -51,7 +51,7 @@ export default {
         labels: this.labels,
         datasets: [
           {
-            backgroundColor: '#f87979',
+            backgroundColor: '#4a94ff',
             data: this.values,
           },
         ],

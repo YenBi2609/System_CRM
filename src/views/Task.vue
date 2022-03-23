@@ -34,7 +34,10 @@ export default {
         Table
     },
     props:{
-
+        keySearch: { 
+            type: String, 
+            default: "" 
+        },
     },
     data() {
         return {
@@ -78,7 +81,14 @@ export default {
     },
     computed: {
       listData(){
-          return this.$store.state.listTask;
+        if (this.keySearch) {
+            let s = this.keySearch.toLowerCase();
+            return this.$store.state.listTask.filter((item) => {
+                return JSON.stringify(item).toLowerCase().includes(s);
+            });
+        } else {
+            return this.$store.state.listTask;
+        }
       }
     },
     watch: {

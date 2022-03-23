@@ -73,7 +73,10 @@ export default {
         }
     },
     computed: {
-
+        keySearch: { 
+            type: String, 
+            default: "" 
+        },
     },
     watch: {
 

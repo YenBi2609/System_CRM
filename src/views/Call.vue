@@ -33,7 +33,10 @@ export default {
         Table
     },
     props:{
-
+        keySearch: { 
+            type: String, 
+            default: "" 
+        },
     },
     data() {
         return {

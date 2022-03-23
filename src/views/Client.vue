@@ -33,10 +33,10 @@ export default {
         Table
     },
     props:{
-    keySearch: { 
-        type: String, 
-        default: "" 
-    },
+        keySearch: { 
+            type: String, 
+            default: "" 
+        },
     },
     data() {
         return {
@@ -82,7 +82,6 @@ export default {
             } else {
                 return this.$store.state.allClient;
             }
-            // return this.$store.state.allClient;
         },
     },
     watch: {

@@ -1,11 +1,6 @@
 <template>
     <div>
     <v-container fluid>
-        <v-row justify="space-between">
-            <v-col>
-                Dashboard
-            </v-col>
-        </v-row>
 
         <v-row>
 

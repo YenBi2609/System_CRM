@@ -33,7 +33,10 @@ export default {
         Table
     },
     props:{
-
+    keySearch: { 
+        type: String, 
+        default: "" 
+    },
     },
     data() {
         return {
@@ -70,9 +73,17 @@ export default {
         }
     },
     computed: {
-      listData(){
-          return this.$store.state.allClient;
-      }
+        listData(){
+            if (this.keySearch) {
+                let s = this.keySearch.toLowerCase();
+                return this.$store.state.allClient.filter((item) => {
+                    return JSON.stringify(item).toLowerCase().includes(s);
+                });
+            } else {
+                return this.$store.state.allClient;
+            }
+            // return this.$store.state.allClient;
+        },
     },
     watch: {
 

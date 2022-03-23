@@ -72,7 +72,7 @@
           @submit.prevent="search"
         >
           <v-text-field
-            v-model="q"
+            v-model="keySearch"
             flat
             hide-details
             outlined
@@ -103,7 +103,7 @@
     </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <router-view :keySearch="keySearch"/>
     </v-main>
 
 <!-- 
@@ -130,7 +130,7 @@ export default {
   },
   data() {
     return {
-      q: null,
+      keySearch: null,
       tasks: [],
       dialog: false,
       drawer: null,
@@ -242,6 +242,7 @@ export default {
       return null
     },
     listItemClick(item) {
+      this.keySearch = ''
       if (item.route) {
         this.$router.push(item.route)
       }

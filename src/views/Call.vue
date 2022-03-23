@@ -63,7 +63,6 @@ export default {
                 { text: 'Ghi chú', value: 'note' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
-            listData: [],
             defaultItem: [
                 { text: 'Khách hàng',value: '', key: 'idClient',type: 'autocomplete' },
                 { text: 'Ngày',value: '', key: 'date',type: 'date' },
@@ -71,11 +70,21 @@ export default {
                 { text: 'Ghi chú',value: '', key: 'note' },
             ],
             notify: false,
-            message: ''
+            message: '',
+            listCalls: []
         }
     },
     computed: {
-
+        listData(){
+            if (this.keySearch) {
+                let s = this.keySearch.toLowerCase();
+                return this.listCalls.filter((item) => {
+                    return JSON.stringify(item).toLowerCase().includes(s);
+                });
+            } else {
+                return this.listCalls;
+            }
+        },
     },
     watch: {
 
@@ -114,7 +123,7 @@ export default {
     methods: {
         async getCall(){
             let res = await callApi.getCalls();
-            this.listData = res.listObject;
+            this.listCalls = res.listObject;
         },
         async addItem(item){
             let object  = {}

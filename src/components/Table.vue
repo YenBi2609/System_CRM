@@ -264,7 +264,7 @@ export default {
         }
         this.editedItem.push(data) 
       })
-      if(this.idTaskShow != ''){
+      if(this.idTaskShow != 0){
         this.listData.map(task=>{
           if(task.id == this.idTaskShow){
             this.editItem(task)

@@ -33,7 +33,10 @@ export default {
         Table
     },
     props:{
-
+        keySearch: { 
+            type: String, 
+            default: "" 
+        },
     },
     data() {
         return {
@@ -58,7 +61,7 @@ export default {
                 { text: 'Số lượng', value: 'quantity' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
-            listData: [],
+            listProducts: [],
             defaultItem: [
                 { text: 'Tên sản phẩm',value: '', key: 'name' },
                 { text: 'Mô tả',value: '', key: 'description' },
@@ -73,9 +76,15 @@ export default {
         }
     },
     computed: {
-        keySearch: { 
-            type: String, 
-            default: "" 
+        listData(){
+            if (this.keySearch) {
+                let s = this.keySearch.toLowerCase();
+                return this.listProducts.filter((item) => {
+                    return JSON.stringify(item).toLowerCase().includes(s);
+                });
+            } else {
+                return this.listProducts;
+            }
         },
     },
     watch: {
@@ -89,7 +98,7 @@ export default {
     methods: {
         async getProduct(){
             let res = await productApi.getProducts();
-            this.listData = res.response;
+            this.listProducts = res.response;
         },
         async addItem(item){
             let object  = {}

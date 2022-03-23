@@ -66,7 +66,7 @@ export default {
                 { text: 'Ghi chú', value: 'note' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
-            listData: [],
+            listOrders: [],
             defaultItem: [
                 { text: 'Trạng thái',value: '', key: 'status' },
                 { text: 'Mã khách hàng',value: '', key: 'idClient' },
@@ -81,7 +81,16 @@ export default {
         }
     },
     computed: {
-
+        listData(){
+            if (this.keySearch) {
+                let s = this.keySearch.toLowerCase();
+                return this.listOrders.filter((item) => {
+                    return JSON.stringify(item).toLowerCase().includes(s);
+                });
+            } else {
+                return this.listOrders;
+            }
+        },
     },
     watch: {
 
@@ -109,7 +118,7 @@ export default {
     methods: {
         async getOrder(){
             let res = await orderApi.getOrders();
-            this.listData = res.listObject;
+            this.listOrders = res.listObject;
         },
         async addItem(item){
             let object  = {}

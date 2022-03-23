@@ -76,7 +76,7 @@ export default {
             ],
             notify: false,
             message: '',
-            idTaskShow: ''
+            idTaskShow: 0
         }
     },
     computed: {

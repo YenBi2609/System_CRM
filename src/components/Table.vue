@@ -86,6 +86,14 @@
                         :rules="[rules.required]"
                         type="date"
                       ></v-text-field>
+                      <v-textarea
+                        v-if="item.type=='textarea'"
+                        outlined
+                        name="input-7-4"
+                        :label="item.text"
+                        v-model="item.value"
+                        :rules="[rules.required]"
+                      ></v-textarea>
                   </div>
               </v-card-text>
   
@@ -122,19 +130,47 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
+      <v-tooltip bottom v-if="$route.name == 'Email'">
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon
+            v-bind="attrs"
+            v-on="on"
+            small
+            class="mr-2"
+            @click="sendMail(item)"
+          >
+            mdi-send-circle
+          </v-icon>
+        </template>
+        <span>Kích hoạt chiến dịch</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
         <v-icon
           small
           class="mr-2"
           @click="editItem(item)"
+          v-bind="attrs"
+          v-on="on"
         >
           mdi-pencil
         </v-icon>
+        </template>
+        <span>Sửa</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
         <v-icon
           small
           @click="deleteItem(item)"
+          v-bind="attrs"
+          v-on="on"
         >
           mdi-delete
         </v-icon>
+        </template>
+        <span>Xóa</span>
+      </v-tooltip>
       </template>
       <template v-slot:no-data>
       </template>
@@ -274,7 +310,9 @@ export default {
   },
 
   methods: {
-
+    sendMail(item){
+      this.$emit('send-mail', item )
+    },
     editItem (item) {
       this.editedItem = []
       this.editedIndex = this.listData.indexOf(item);

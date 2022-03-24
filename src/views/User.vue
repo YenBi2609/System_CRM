@@ -100,8 +100,8 @@ export default {
                 object[index.key] = index.value
             })
             try{
-                await userApi.addUsers(object);
-                object['id'] = this.listData[this.listData.length - 1].id + 1;
+                let res = await userApi.addUsers(object);
+                object['id'] = res.data.data.id;
                 this.listData.push(object)
             }
             catch(err){

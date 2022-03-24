@@ -18,17 +18,18 @@
         :defaultItem="defaultItem"
         @add-item="addItem"
         @update-item="updateItem"
-        @delete-item="deleteItem" 
+        @delete-item="deleteItem"
+        @send-mail="sendMail"
         />
     </div>
 </template>
 
 <script>
 import Table from '@/components/Table.vue'
-import { productApi } from '@/api/product';
+import { campainApi } from '@/api/campain';
 
 export default {
-    name: 'Product',
+    name: 'EmailMarketing',
     components: { 
         Table
     },
@@ -40,50 +41,45 @@ export default {
     },
     data() {
         return {
-            object: 'Sản phẩm',
-            titleObject: 'Danh sách sản phẩm',
+            object: 'Chiến dịch Email',
+            titleObject: 'Danh sách chiến dịch',
             action: {
-                add: 'Tạo mới sản phẩm',
-                edit: 'Thông tin sản phẩm',
-                delete: 'Xóa sản phẩm'
+                add: 'Tạo chiến dịch',
+                edit: 'Thông tin chiến dịch',
+                delete: 'Xóa chiến dịch'
             },
             headers: [
                 {
-                    text: 'Mã sản phẩm',
+                    text: 'Mã chiến dịch',
                     align: 'start',
                     sortable: true,
                     value: 'id',
                 },
-                { text: 'Tên sản phẩm', value: 'name' },
-                { text: 'Mô tả', value: 'description' },
-                { text: 'Giá bán', value: 'price' },
-                { text: 'Giá nhập', value: 'cost' },
-                { text: 'Số lượng', value: 'quantity' },
+                { text: 'Tên chiến dịch', value: 'name' },
+                { text: 'Mã người tạo', value: 'idUser' },
+                { text: 'Tên người tạo', value: 'userName' },
+                { text: 'Số email đã gửi', value: 'totalEmailSent' },
+                { text: 'Ngày tạo', value: 'created_at' },
                 { text: 'Hành động', value: 'actions', sortable: false },                
             ],
-            listProducts: [],
             defaultItem: [
-                { text: 'Tên sản phẩm',value: '', key: 'name' },
-                { text: 'Mô tả',value: '', key: 'description' },
-                { text: 'Giá bán',value: '', key: 'price',type:'number' },
-                { text: 'Giá nhập',value: '', key: 'cost',type:'number'},
-                { text: 'Số lượng',value: '', key: 'quantity', type:'number' },
+                { text: 'Tên chiến dịch', value: '',key: 'name' },
+                { text: 'Nội dung', value: '', key: 'content', type: 'textarea' },
             ],
             notify: false,
-            message: ''
-
-
+            message: '',
+            listCampains: [],
         }
     },
     computed: {
         listData(){
             if (this.keySearch) {
                 let s = this.keySearch.toLowerCase();
-                return this.listProducts.filter((item) => {
+                return this.listCampains.filter((item) => {
                     return JSON.stringify(item).toLowerCase().includes(s);
                 });
             } else {
-                return this.listProducts;
+                return this.listCampains;
             }
         },
     },
@@ -92,22 +88,36 @@ export default {
     },
 
     created () {
-        this.getProduct();
+        this.getCampain();
     },
 
     methods: {
-        async getProduct(){
-            let res = await productApi.getProducts();
-            this.listProducts = res.response;
+        async getCampain(){
+            let res = await campainApi.getCampains();
+            res.response.map((item) => {
+                item.created_at = item.created_at.slice(0, 10)
+            });
+            this.listCampains = res.response;
         },
         async addItem(item){
             let object  = {}
             item.map(index=>{
                 object[index.key] = index.value
             })
+            object['idUser'] = this.$store.state.currentUser.id;
+
             try{
-                let res = await productApi.addProducts(object);
+                let res = await campainApi.addCampains(object);
                 object['id'] = res.data.data.id;
+
+                let allUser = this.$store.state.allUser;
+                allUser.map(user=>{
+                    if(user.id == object.idUser){
+                        object['userName'] = user.name
+                    }
+                })
+                object['created_at'] = new Date().toJSON().slice(0,10);
+
                 this.listData.push(object)
             }
             catch(err){
@@ -122,8 +132,9 @@ export default {
                 object[index.key] = index.value
             })
             Object.assign(this.listData[data.index], object)
+            object['idUser'] = this.$store.state.currentUser.id;
             try{
-                await productApi.updateProducts(this.listData[data.index].id, object);
+                await campainApi.updateCampains(this.listData[data.index].id, object);
             }
             catch(err){
                 console.log(err)
@@ -134,7 +145,7 @@ export default {
         async deleteItem(index){
 
             try{
-                await productApi.deleteProducts(this.listData[index].id);
+                await campainApi.deleteCampains(this.listData[index].id);
                 this.listData.splice(index, 1)
             }
             catch(err){
@@ -142,6 +153,18 @@ export default {
                 this.notify = true
                 this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }
+        },
+        async sendMail(item){
+            try{
+                await campainApi.sendMail(item.id);
+                this.notify = true
+                this.message = "Gửi email thành công!"
+            }
+            catch(err){
+                console.log(err)
+                this.notify = true
+                this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
+            }            
         }
     }
 }

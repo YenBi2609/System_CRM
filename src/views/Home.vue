@@ -172,6 +172,11 @@ export default {
           route: '/call',
         },
         {
+          label: 'Email Marketing',
+          icon: 'mdi-email-send-outline',
+          route: '/email',
+        },
+        {
           label: 'Users',
           icon: 'mdi-account-cog',
           route: '/user',

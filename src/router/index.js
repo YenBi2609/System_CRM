@@ -60,6 +60,11 @@ const routes = [
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue')
   },
+  {
+    path: '/email',
+    name: 'Email',
+    component: () => import('../views/EmailMarketing.vue')
+  },
 ]
 
 const router = new VueRouter({

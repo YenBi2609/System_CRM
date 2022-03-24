@@ -131,9 +131,8 @@ export default {
                 object[index.key] = index.value
             })
             try{
-                await callApi.addCalls(object);
-                // tự động tăng số thứ tự
-                object['id'] = this.listData[this.listData.length - 1].id + 1;
+                let res = await callApi.addCalls(object);
+                object['id'] = res.data.data.id;
 
                 let allClient = this.$store.state.allClient;
                 allClient.map(client=>{

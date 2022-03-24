@@ -124,8 +124,8 @@ export default {
             })
 
             try{
-                await taskApi.addTasks(object);
-                object['id'] = this.listData[this.listData.length - 1].id + 1;
+                let res = await taskApi.addTasks(object);
+                object['id'] = res.data.data.id;
 
                 let allUser = this.$store.state.allUser;
                 allUser.map(user=>{

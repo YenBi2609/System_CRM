@@ -68,14 +68,17 @@ export default {
                 { text: 'Địa chỉ',value: '', key: 'address' },
                 { text: 'Tên đăng nhập ( email )',value: '', key: 'email' },
                 { text: 'Mật khẩu',value: '', key: 'password' },
-                { text: 'Vai trò',value: '', key: 'role' ,type:'number'},
+                { text: 'Vai trò',value: '', key: 'role',type: 'autocomplete',listValue: ['Quản lý','Nhân viên'] },
             ],
             notify: false,
             message: ''
         }
     },
     computed: {
-      listData(){
+      listData(){          
+            this.$store.state.allUser.map(user=>{
+                this.convertKeyToRole(user)
+            })
             if (this.keySearch) {
                 let s = this.keySearch.toLowerCase();
                 return this.$store.state.allUser.filter((item) => {
@@ -99,6 +102,7 @@ export default {
             item.map(index=>{
                 object[index.key] = index.value
             })
+            this.convertRoleToKey(object)
             try{
                 let res = await userApi.addUsers(object);
                 object['id'] = res.data.data.id;
@@ -110,12 +114,27 @@ export default {
                 this.message = "Có lỗi xảy ra, vui lòng xem lại thông tin!"
             }
         },
+        convertKeyToRole(user){
+            if(user.role == 0){
+                user.role = 'Nhân viên'
+            }else {
+                user.role = 'Quản lý'
+            }
+        },
+        convertRoleToKey(user){
+            if(user.role == 'Nhân viên'){
+                user.role = 0
+            }else {
+                user.role = 1
+            }
+        },
         async updateItem(data){
             let object  = {}
             data.item.map(index=>{
                 object[index.key] = index.value
             })
             Object.assign(this.listData[data.index], object)
+            this.convertRoleToKey(object)
             try{
                 await userApi.updateUsers(this.listData[data.index].id, object);
                 this.$store.commit('handleGetUser', this.listData);

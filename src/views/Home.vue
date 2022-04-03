@@ -176,11 +176,6 @@ export default {
           icon: 'mdi-email-send-outline',
           route: '/email',
         },
-        {
-          label: 'Users',
-          icon: 'mdi-account-cog',
-          route: '/user',
-        },
       ],
     }
   },
@@ -203,6 +198,13 @@ export default {
     // if (this.isGranted('ROLE_TASK_LIST')) {
       this.getData()
     // }
+    if(this.$store.state.currentUser.role == 1){
+      this.items.push(  {
+          label: 'Users',
+          icon: 'mdi-account-cog',
+          route: '/user',
+        })
+    }
 
     this.initActiveMenuItem()
   },
@@ -211,12 +213,14 @@ export default {
         // get task
         let task = await taskApi.getTasks();
         this.$store.commit('handleGetTask', task.response);
+
         // get client
         let client = await clientApi.getClients();
         this.$store.commit('handleGetClient', client.response);
+
         // get user
-		let user = await userApi.getUsers();
-		this.$store.commit('handleGetUser', user.response);
+      let user = await userApi.getUsers();
+      this.$store.commit('handleGetUser', user.response);
     },
     initActiveMenuItem() {
       this.items.forEach((i) => {

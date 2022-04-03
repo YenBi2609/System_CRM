@@ -59,9 +59,9 @@
                     dark
                 >Đăng nhập</v-btn>
             </v-card-actions>
-            <div class="d-flex justify-center bg-secondary mb-3">
+            <!-- <div class="d-flex justify-center bg-secondary mb-3">
                 <v-btn text class="fs-13 fw-400 mb-2" style="color:blue" @click="forgotPass">Quên mật khẩu</v-btn>
-            </div>
+            </div> -->
         </v-card>
     </v-flex>
     </v-app>

@@ -67,8 +67,8 @@ export default {
             ],
             defaultItem: [
                 { text: 'Tên công việc', value: '',key: 'name' },
-                { text: 'Trạng thái', value: '',key: 'status' },
-                { text: 'Mức độ ưu tiên', value: '',key: 'priority' },
+                { text: 'Trạng thái', value: '',key: 'status', type: 'autocomplete', listValue: ['Mới', 'Hoàn thành', 'Hủy'] },
+                { text: 'Mức độ ưu tiên', value: '',key: 'priority',type: 'autocomplete', listValue: ['Critical', 'High', 'Medium', 'Low'] },
                 { text: 'Người thực thi', value: '',key: 'idUser', type: 'autocomplete'},
                 { text: 'Thời gian', value: '',key: 'duration', type: 'number' },
                 { text: 'Ngày bắt đầu', value: '',key: 'start_date', type:'date' },

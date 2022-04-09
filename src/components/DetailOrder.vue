@@ -261,7 +261,7 @@ export default {
     return {
       productSelected: [],
       listProduct: [],
-      listStatus: ['Pending', 'New'],
+      listStatus: ['Mới', 'Hoàn thành', 'Hủy'],
       order: {
         id: '',
         status: '',

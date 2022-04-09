@@ -133,8 +133,8 @@ export default {
             data.item.map(index=>{
                 object[index.key] = index.value
             })
-            Object.assign(this.listData[data.index], object)
             this.convertRoleToKey(object)
+            Object.assign(this.listData[data.index], object)
             try{
                 await userApi.updateUsers(this.listData[data.index].id, object);
                 this.$store.commit('handleGetUser', this.listData);

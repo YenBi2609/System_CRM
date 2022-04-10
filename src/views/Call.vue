@@ -161,6 +161,22 @@ export default {
             data.item.map(index=>{
                 object[index.key] = index.value
             })
+
+            let allClient = this.$store.state.allClient;
+            allClient.map(client=>{
+                if(client.id == object.idClient){
+                    object['clientName'] = client.name
+                }
+            })
+
+            let allUser = this.$store.state.allUser;
+            allUser.map(user=>{
+                if(user.id == object.idUser){
+                    object['userName'] = user.name
+                    object['phoneNumber'] = user.phoneNumber
+                }
+            })
+            
             Object.assign(this.listData[data.index], object)
             try{
                 await callApi.updateCalls(this.listData[data.index].id, object);

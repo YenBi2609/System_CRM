@@ -117,7 +117,7 @@ export default {
         convertKeyToRole(user){
             if(user.role == 0){
                 user.role = 'Nhân viên'
-            }else {
+            }else if( typeof user.role != 'string'){
                 user.role = 'Quản lý'
             }
         },
@@ -133,8 +133,8 @@ export default {
             data.item.map(index=>{
                 object[index.key] = index.value
             })
-            this.convertRoleToKey(object)
             Object.assign(this.listData[data.index], object)
+            this.convertRoleToKey(object)
             try{
                 await userApi.updateUsers(this.listData[data.index].id, object);
                 this.$store.commit('handleGetUser', this.listData);

@@ -147,6 +147,12 @@ export default {
             data.item.map(index=>{
                 object[index.key] = index.value
             })
+            let allUser = this.$store.state.allUser;
+            allUser.map(user=>{
+                if(user.id == object.idUser){
+                    object['userName'] = user.name
+                }
+            })
             Object.assign(this.listData[data.index], object)
             try{
                 await taskApi.updateTasks(this.listData[data.index].id, object);

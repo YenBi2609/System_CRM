@@ -55,10 +55,15 @@
                 <!-- <v-container> -->
                   <div v-for="item in editedItem" :key="item.key">
                       <v-text-field
-                        v-if="!item.type"
+                        v-if="!item.type && item.key != 'note'"
                         v-model="item.value"
                         :label="item.text"
                         :rules="[rules.required]"
+                      ></v-text-field>
+                      <v-text-field
+                        v-if="item.key == 'note'"
+                        v-model="item.value"
+                        :label="item.text"
                       ></v-text-field>
                       <v-autocomplete
                         v-if="item.type=='autocomplete'"
@@ -385,7 +390,7 @@ export default {
     save () {
       let checkEmpty = true;
       this.editedItem.map(item =>{
-        if(item.value == ''){
+        if(item.value == '' && item.key != 'note'){
           checkEmpty = false
         }
       })

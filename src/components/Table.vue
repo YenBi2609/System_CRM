@@ -46,7 +46,7 @@
                 {{action.add}}
               </v-btn>
             </template>
-            <v-card v-if="dialog || !isOrder">
+            <v-card v-if="dialog && !isOrder">
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>

@@ -82,6 +82,7 @@
                         v-model="item.value"
                         :label="item.text"
                         :rules="[rules.required]"
+                        oninput="if(this.value < 0) this.value = 0;"
                         type="number"
                       ></v-text-field>
                       <v-text-field

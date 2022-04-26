@@ -137,6 +137,7 @@
                     dense
                     label="Số lượng"
                     v-model="product.quantity"
+                    oninput="if(this.value < 1) this.value = 1;"
                     ></v-text-field>
                 </v-col>
         
@@ -163,6 +164,7 @@
                     label="Giảm giá (%)"
                     v-model="product.discount"
                     type="number"
+                    oninput="if(this.value < 0) this.value = 0;"
                     ></v-text-field>
                 </v-col>       
                 <v-col
@@ -292,25 +294,64 @@ export default {
       productSelected:{
         //   immediate: true,
           handler(){
-            this.productSelected.map(prd=>{
-                this.listProduct.map(p=>{
-                    if(prd == p.id){
-                        this.order.listProduct.map(prdSelected=>{
-                            if(prdSelected.idProduct != prd){
-                                this.order.listProduct.push(
-                                    {idProduct: p.id,
-                                    name: p.name,
-                                    price: p.price,
-                                    quantity: p.quantity,
-                                    discount: 0,
-                                    total: p.price * p.quantity,
-                                    }                
-                                )
+            let self = this;
+            if(self.productSelected.length == 0){
+                self.order.listProduct = []
+            }else {
+                var pushed = false // check product đã được push vào order.listProduct hay chưa
+                self.productSelected.map(prd=>{
+                        this.listProduct.map(p=>{
+                            if(prd == p.id){                            
+                                if(self.order.listProduct.length != 0){
+                                    var hasInList = false; // mục đích xác định product mới được chọn chưa nằm trong danh sách product ban đầu
+                                    //
+                                    self.order.listProduct.map(oldProduct=>{
+                                        if(prd == oldProduct.idProduct){
+                                            hasInList = true;
+                                        }
+                                        oldProduct.selected = false // dùng để xác định sản phẩm bị xóa
+                                        self.productSelected.map(newProduct=>{
+                                            if(oldProduct.idProduct == newProduct){
+                                                oldProduct.selected = true
+                                            }
+                                        })
+                                    })
+                                    self.order.listProduct.map(prdSelected=>{
+                                        if(prdSelected.idProduct != prd && !pushed && !hasInList && (self.productSelected.length >= self.order.listProduct.length)){
+                                            pushed = true;
+                                            self.order.listProduct.push(
+                                                {idProduct: p.id,
+                                                name: p.name,
+                                                price: p.price,
+                                                quantity: 1,
+                                                discount: 0,
+                                                total: p.price * p.quantity,
+                                                selected: true
+                                                }                
+                                            )
+                                        }
+                                    })
+                                    // xóa sản phẩm
+                                    self.order.listProduct = self.order.listProduct.filter(pr => pr.selected)
+                                }else {
+                                    // push sản phẩm đầu tiên
+                                    pushed = true;
+                                    self.order.listProduct.push(
+                                        {   
+                                            idProduct: p.id,
+                                            name: p.name,
+                                            price: p.price,
+                                            quantity: 1,
+                                            discount: 0,
+                                            total: p.price * p.quantity,
+                                            selected: true
+                                        }                
+                                    )                            
+                                }
                             }
                         })
-                    }
                 })
-            })
+            }
         }
       },
       order: {

@@ -9,7 +9,7 @@
     >
         {{ message }}
     </v-snackbar>
-        <h3>Thông tin đơn hàng</h3>
+        <h3 style="margin: 20px 0px 0px 8px;">Thông tin đơn hàng</h3>
         <v-form>
             <v-container>
                 <v-row>
